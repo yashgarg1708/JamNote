@@ -3,7 +3,7 @@ services:
     name: jamnotes
     runtime: node
     autoDeploy: true
-    buildCommand: npm ci --prefix back_end && npm ci --prefix front_end && npm run build --prefix front_end && npm run build --prefix back_end
+    buildCommand: npm ci --include=dev --prefix front_end && npm run build --prefix front_end && npm ci --include=dev --prefix back_end && npm run build --prefix back_end
     startCommand: npm start --prefix back_end
     healthCheckPath: /api/health
     envVars:
