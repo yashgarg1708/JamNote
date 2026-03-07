@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
+    "build": "npm run ensure:frontend && npm run ensure:backend && tsc",
+    "ensure:frontend": "[ -f ../front_end/dist/index.html ] || (npm --prefix ../front_end install --include=dev && npm --prefix ../front_end run build)",
+    "ensure:backend": "[ -x ./node_modules/.bin/tsc ] || npm install --include=dev",
     "start": "node dist/server.js"
   },
   "keywords": [],
