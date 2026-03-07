@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { forgotPasswordApi } from "../api/auth";
 import { applyTheme, getStoredTheme, toggleTheme, type ThemeMode } from "../utils/theme";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
+  const [sp] = useSearchParams();
+  const [email, setEmail] = useState(() => sp.get("email")?.trim().toLowerCase() ?? "");
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [theme, setTheme] = useState<ThemeMode>(() => getStoredTheme());
@@ -12,6 +13,11 @@ export default function ForgotPassword() {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const queryEmail = sp.get("email")?.trim().toLowerCase() ?? "";
+    if (queryEmail && !email) setEmail(queryEmail);
+  }, [sp, email]);
 
   const submit = async () => {
     setErr(null);

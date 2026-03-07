@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   applyTheme,
@@ -9,6 +10,7 @@ import {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [theme, setTheme] = useState<ThemeMode>(() => getStoredTheme());
 
   useEffect(() => {
@@ -40,6 +42,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="user-name">{user?.name}</div>
           <div className="user-email">{user?.email}</div>
         </div>
+
+        <button
+          onClick={() => {
+            const q = user?.email ? `?email=${encodeURIComponent(user.email)}` : "";
+            navigate(`/forgot-password${q}`);
+          }}
+        >
+          Reset Password
+        </button>
 
         <button onClick={logout}>Logout</button>
       </header>
