@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { applyTheme, getStoredTheme, toggleTheme, type ThemeMode } from "../utils/theme";
+import {
+  applyTheme,
+  getStoredTheme,
+  toggleTheme,
+  type ThemeMode,
+} from "../utils/theme";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
@@ -16,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="brand-block">
           <div className="brand-icon">✦</div>
           <div className="brand-meta">
-            <div className="brand-title">Jamboard Notes</div>
+            <div className="brand-title">JamNotes</div>
             <div className="brand-subtitle">Collaborative workspace</div>
           </div>
         </div>

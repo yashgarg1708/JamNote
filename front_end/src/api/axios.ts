@@ -5,9 +5,10 @@ import {
   getStoredRefreshToken,
   setStoredAccessToken,
 } from "../utils/authSession";
+import { API_BASE_URL } from "../config/env";
 
 export const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 

@@ -1,7 +1,8 @@
 import { io } from "socket.io-client";
 import { getStoredAccessToken } from "../utils/authSession";
+import { SOCKET_URL } from "../config/env";
 
-export const socket = io("http://localhost:8000", {
+export const socket = io(SOCKET_URL, {
   autoConnect: false,
   auth: (cb) => {
     cb({ token: getStoredAccessToken() });

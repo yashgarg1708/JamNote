@@ -22,7 +22,7 @@ export default function ForgotPassword() {
     }
     try {
       const r = await forgotPasswordApi(email.trim().toLowerCase());
-      setMsg(r.message + " (Check backend logs for reset URL in local dev.)");
+      setMsg(r.message);
     } catch (e: any) {
       setErr(e?.response?.data?.message ?? "Request failed");
     }
