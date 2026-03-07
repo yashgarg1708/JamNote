@@ -354,14 +354,16 @@ export const softDeleteNote = asyncHandler(async (req: AuthedRequest, res) => {
     return res.json(note);
   }
 
-  const beforeCount = note.collaborators.length;
+  const hadDirectShare = note.collaborators.some((c: any) => idOf(c.user) === userId);
+  if (!hadDirectShare) {
+    throw new ApiError(
+      400,
+      "This note access is inherited from notebook sharing. Remove the shared notebook instead.",
+    );
+  }
+
   note.collaborators = note.collaborators.filter((c: any) => idOf(c.user) !== userId) as any;
   await note.save();
-
-  if (beforeCount === note.collaborators.length) {
-    notebook.collaborators = notebook.collaborators.filter((c: any) => idOf(c.user) !== userId) as any;
-    await notebook.save();
-  }
 
   return res.json({ message: "Removed from shared note", noteId: id });
 });
