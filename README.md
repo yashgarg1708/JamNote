@@ -9,9 +9,7 @@ Collaborative notes app with:
 
 ## Current Scope
 
-This repository currently implements collaborative **notes**, not a full drawing whiteboard/chat product.
-
-## Project Structure
+This repository currently implements collaborative **notes**
 
 - `back_end` - Express + TypeScript + MongoDB API
 - `front_end` - React + TypeScript + Vite client
