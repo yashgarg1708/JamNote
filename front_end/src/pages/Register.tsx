@@ -4,6 +4,8 @@ import { registerApi } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import { applyTheme, getStoredTheme, toggleTheme, type ThemeMode } from "../utils/theme";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,12 +22,18 @@ export default function Register() {
 
   const submit = async () => {
     setErr(null);
+    const normalizedEmail = email.trim().toLowerCase();
+
     if (!name.trim()) {
       setErr("Name is required");
       return;
     }
-    if (!email.trim()) {
+    if (!normalizedEmail) {
       setErr("Email is required");
+      return;
+    }
+    if (!EMAIL_RE.test(normalizedEmail)) {
+      setErr("Email is invalid");
       return;
     }
     if (password.length < 8) {
@@ -39,14 +47,24 @@ export default function Register() {
     try {
       const data = await registerApi({
         name: name.trim(),
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         password,
         confirmPassword,
       });
       setSession(data.user, data.accessToken, data.refreshToken);
       nav("/", { replace: true });
     } catch (e: any) {
-      setErr(e?.response?.data?.message ?? "Register failed");
+      const apiMessage = e?.response?.data?.message as string | undefined;
+      if (apiMessage === "Validation error") {
+        const emailErrors = e?.response?.data?.details?.fieldErrors?.email as
+          | string[]
+          | undefined;
+        if (emailErrors?.length) {
+          setErr("Email is invalid");
+          return;
+        }
+      }
+      setErr(apiMessage ?? "Register failed");
     }
   };
 
@@ -65,6 +83,8 @@ export default function Register() {
         <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
         <input
           placeholder="Email"
+          type="email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
