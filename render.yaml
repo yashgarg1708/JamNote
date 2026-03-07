@@ -11,3 +11,9 @@ services:
         value: production
       - key: MONGO_URI
         sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false

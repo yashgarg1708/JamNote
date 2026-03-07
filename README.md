@@ -47,8 +47,23 @@ Everything else has safe defaults.
 Real email provider is supported via Resend (optional):
 - `RESEND_API_KEY`
 - `MAIL_FROM`
+- `FRONTEND_URL` (recommended in production so reset links use your app URL)
 
 If mailer vars are not configured, reset links are logged on server.
+
+### Mailer Setup (Resend + Render)
+
+1. Create a Resend API key in the Resend dashboard.
+2. Verify your sender domain in Resend, or use sandbox sender:
+   - `JamNotes <onboarding@resend.dev>` (testing only)
+3. In Render service env vars, set:
+   - `RESEND_API_KEY=<your_key>`
+   - `MAIL_FROM=JamNotes <your_verified_sender@yourdomain.com>`
+   - `FRONTEND_URL=https://your-frontend-domain`
+4. Redeploy the service.
+5. Test from UI:
+   - Open `Forgot password` and submit a registered email.
+   - Check inbox/spam for reset email.
 
 ## Environment Variables Reference
 
