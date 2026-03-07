@@ -51,9 +51,18 @@ export default function AppHome() {
   const [sharedTarget, setSharedTarget] = useState<SharedTarget>("shared-notes");
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialog | null>(null);
   const [confirmBusy, setConfirmBusy] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const selectedNotebookForEditor = useMemo(() => {
     if (!activeNoteId) return null;
@@ -110,7 +119,7 @@ export default function AppHome() {
 
     const fetchedNotes = await listNotes({
       notebookId,
-      q: search,
+      q: debouncedSearch,
       includeDeleted,
       scope,
     });
@@ -138,7 +147,7 @@ export default function AppHome() {
 
   useEffect(() => {
     void load();
-  }, [activeNotebookId, sharedTarget, search, view]);
+  }, [activeNotebookId, debouncedSearch, sharedTarget, view]);
 
   const onCreateNotebook = async (title: string) => {
     await createNotebook(title);
