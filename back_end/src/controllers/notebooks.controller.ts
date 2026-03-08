@@ -36,6 +36,7 @@ export const createNotebook = asyncHandler(async (req: AuthedRequest, res) => {
   if (!title) throw new ApiError(400, "Title is required");
 
   const notebook = await Notebook.create({ owner, title });
+  await notebook.populate("owner", "email name");
   res.status(201).json(notebook);
 });
 
@@ -50,7 +51,7 @@ export const listNotebooks = asyncHandler(async (req: AuthedRequest, res) => {
       collaborators: { $elemMatch: { user: userId } },
       deletedAt: null,
     })
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .populate("owner", "email name")
       .lean();
 
@@ -61,7 +62,8 @@ export const listNotebooks = asyncHandler(async (req: AuthedRequest, res) => {
   if (!includeDeleted) filter.deletedAt = null;
 
   const notebooks = await Notebook.find(filter)
-    .sort({ updatedAt: -1 })
+    .sort({ createdAt: -1 })
+    .populate("owner", "email name")
     .populate("collaborators.user", "email name")
     .lean();
   res.json(notebooks);
@@ -76,7 +78,7 @@ export const listSharedOverview = asyncHandler(async (req: AuthedRequest, res) =
       collaborators: { $elemMatch: { user: userId } },
       deletedAt: null,
     })
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .populate("owner", "email name")
       .lean(),
     Note.find({
@@ -84,7 +86,7 @@ export const listSharedOverview = asyncHandler(async (req: AuthedRequest, res) =
       collaborators: { $elemMatch: { user: userId } },
       deletedAt: null,
     })
-      .sort({ pinned: -1, updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .populate({ path: "notebook", select: "title deletedAt owner" })
       .select("_id title pinned notebook updatedAt createdAt")
       .lean(),
@@ -208,7 +210,10 @@ export const addNotebookCollaborator = asyncHandler(async (req: AuthedRequest, r
   }
 
   await notebook.save();
-  await notebook.populate("collaborators.user", "email name");
+  await notebook.populate([
+    { path: "owner", select: "email name" },
+    { path: "collaborators.user", select: "email name" },
+  ]);
 
   res.json(notebook);
 });
@@ -232,7 +237,10 @@ export const removeNotebookCollaborator = asyncHandler(async (req: AuthedRequest
   ) as any;
 
   await notebook.save();
-  await notebook.populate("collaborators.user", "email name");
+  await notebook.populate([
+    { path: "owner", select: "email name" },
+    { path: "collaborators.user", select: "email name" },
+  ]);
 
   res.json(notebook);
 });

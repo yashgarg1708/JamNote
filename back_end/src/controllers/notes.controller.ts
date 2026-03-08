@@ -180,7 +180,7 @@ export const listNotes = asyncHandler(async (req: AuthedRequest, res) => {
   }
 
   const notes = await Note.find(noteFilter)
-    .sort({ pinned: -1, updatedAt: -1 })
+    .sort({ createdAt: -1 })
     .select("-content")
     .populate("owner", "name email")
     .populate("lastEditedBy", "name email")

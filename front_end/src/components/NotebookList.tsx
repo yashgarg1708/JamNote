@@ -4,15 +4,6 @@ import type { NotebookWithSharing } from "../api/notebooks";
 export type SidebarView = "active" | "shared" | "trash";
 export type SharedTarget = "shared-notes" | string | null;
 
-function idOf(value: unknown): string {
-  if (value && typeof value === "object") {
-    const v = value as { _id?: unknown; id?: unknown };
-    if (v._id) return String(v._id);
-    if (v.id) return String(v.id);
-  }
-  return value ? String(value) : "";
-}
-
 function nameOf(value: unknown): string {
   if (value && typeof value === "object") {
     const v = value as { name?: string; email?: string };
@@ -179,8 +170,8 @@ export default function NotebookList({
           <div className="item-stack">
             {sharedNotebooks.map((nb) => {
               const selected = sharedTarget === nb._id;
-              const ownerName = nameOf(nb.owner) || idOf(nb.owner);
               const ownerEmail = emailOf(nb.owner);
+              const ownerName = nameOf(nb.owner) || ownerEmail || "Unknown user";
 
               return (
                 <div key={nb._id} className={`item-card shared ${selected ? "active" : ""}`}>

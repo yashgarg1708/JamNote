@@ -30,7 +30,7 @@ function nameOf(value: unknown): string {
     const v = value as { name?: string; email?: string };
     return v.name?.trim() || v.email?.trim() || "";
   }
-  return value ? String(value) : "";
+  return "";
 }
 
 function directRoleForUser(note: NoteWithSharing, userId: string): ShareRole | null {
@@ -141,6 +141,10 @@ export default function ShareNotebookModal({
 
   const isOwner = idOf(notebook.owner) === idOf(me?.id);
   const collaborators = notebook.collaborators ?? [];
+  const ownerIsMe = isOwner;
+  const ownerName =
+    nameOf(notebook.owner) || (ownerIsMe ? me?.name?.trim() || me?.email?.trim() || "You" : "Unknown user");
+  const ownerEmail = emailOf(notebook.owner) || (ownerIsMe ? me?.email?.trim() || "" : "");
 
   const refreshNotes = async () => {
     setLoadingNotes(true);
@@ -169,8 +173,8 @@ export default function ShareNotebookModal({
 
         <div className="item-sub">Notebook: {notebook.title}</div>
         <div className="item-sub">
-          Shared by: {nameOf(notebook.owner)}
-          {emailOf(notebook.owner) ? ` (${emailOf(notebook.owner)})` : ""}
+          Shared by: {ownerName}
+          {ownerEmail && ownerEmail !== ownerName ? ` (${ownerEmail})` : ""}
         </div>
 
         {!isOwner && <div className="error-text">Only owner can manage notebook sharing.</div>}

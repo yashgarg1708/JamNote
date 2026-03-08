@@ -24,7 +24,7 @@ function nameOf(value: unknown): string {
     const v = value as { name?: string; email?: string };
     return v.name?.trim() || v.email?.trim() || "";
   }
-  return value ? String(value) : "";
+  return "";
 }
 
 export default function ShareNoteModal({
@@ -43,6 +43,10 @@ export default function ShareNoteModal({
 
   const me = getStoredUser();
   const isOwner = idOf(note.owner) === idOf(me?.id);
+  const ownerIsMe = isOwner;
+  const ownerName =
+    nameOf(note.owner) || (ownerIsMe ? me?.name?.trim() || me?.email?.trim() || "You" : "Unknown user");
+  const ownerEmail = emailOf(note.owner) || (ownerIsMe ? me?.email?.trim() || "" : "");
 
   const collaborators = note.collaborators ?? [];
 
@@ -56,8 +60,8 @@ export default function ShareNoteModal({
 
         <div className="item-sub">Note: {note.title}</div>
         <div className="item-sub">
-          Shared by: {nameOf(note.owner)}
-          {emailOf(note.owner) ? ` (${emailOf(note.owner)})` : ""}
+          Shared by: {ownerName}
+          {ownerEmail && ownerEmail !== ownerName ? ` (${ownerEmail})` : ""}
         </div>
 
         {!isOwner && <div className="error-text">Only owner can manage note sharing.</div>}
