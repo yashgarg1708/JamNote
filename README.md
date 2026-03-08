@@ -1,83 +1,119 @@
-# JamNotes
+# JamNote
 
-Collaborative notes app with:
-- JWT auth (access + refresh token flow)
-- Notebook and note sharing (viewer/editor roles)
-- Realtime note editing with Socket.IO
-- Trash/restore flows for notes and notebooks
-- Password reset flow
+JamNote is a collaborative note-taking web application that allows users to create, organize, and share notes in real time.
 
-## Current Scope
+It supports authentication, notebook organization, role-based sharing, and live note editing using WebSockets.
 
-This repository currently implements collaborative **notes**
+---
 
-- `back_end` - Express + TypeScript + MongoDB API
-- `front_end` - React + TypeScript + Vite client
+# Features
+
+- Secure authentication using JWT
+- Notebook and note sharing with viewer/editor roles
+- Real-time collaborative editing powered by Socket.IO
+- Trash and restore functionality for notes and notebooks
+- Password reset flow with email support
+- Structured REST API backend
+
+---
+
+# Tech Stack
+
+## Frontend
+- React
+- TypeScript
+- Vite
+
+## Backend
+- Node.js
+- Express
+- TypeScript
+- MongoDB
+- Socket.IO
+
+## Other Tools
+- JWT Authentication
+- Resend (email service)
+- Render (deployment)
+
+---
+
+# Project Structure
+
+```text
+JamNote/
+│
+├── back_end/      Express + TypeScript + MongoDB API
+├── front_end/     React + TypeScript + Vite client
+└── render.yaml    Render deployment configuration
+
 
 ## Local Setup
 
-1. Create env file:
-   - `cp .env.example .env`
-2. Set `MONGO_URI` in `.env`
-3. Install dependencies and run:
-   - `cd back_end`
-   - `npm install`
-   - `npm run dev`
-4. Start frontend:
-   - `cd front_end`
-   - `npm install`
-   - `npm run dev`
+### 1. Clone the repository
 
-Backend default URL: `http://localhost:8000`
-Frontend default URL: `http://localhost:5173`
+```bash
+git clone https://github.com/yashgarg1708/JamNote.git
+cd JamNote
+```
 
-## Deploy (Only `MONGO_URI` Required)
+### 2. Create environment file
 
-This repo includes:
-- backend static serving for built frontend
-- `render.yaml` for one-service non-Docker deployment
+```bash
+cp .env.example .env
+```
 
-Minimal required runtime env:
-- `MONGO_URI`
+Update `.env` with:
 
-Everything else has safe defaults.
+```env
+MONGO_URI=<your_mongodb_connection>
+```
 
-## Password Reset Mailer
+### 3. Start Backend
 
-Real email provider is supported via Resend (optional):
-- `RESEND_API_KEY`
-- `MAIL_FROM`
-- `FRONTEND_URL` (recommended in production so reset links use your app URL)
+```bash
+cd back_end
+npm install
+npm run dev
+```
 
-If mailer vars are not configured, reset links are logged on server.
+Backend runs at:
 
-### Mailer Setup (Resend + Render)
+```text
+http://localhost:8000
+```
 
-1. Create a Resend API key in the Resend dashboard.
-2. Verify your sender domain in Resend, or use sandbox sender:
-   - `JamNotes <onboarding@resend.dev>` (testing only)
-3. In Render service env vars, set:
-   - `RESEND_API_KEY=<your_key>`
-   - `MAIL_FROM=JamNotes <your_verified_sender@yourdomain.com>`
-   - `FRONTEND_URL=https://your-frontend-domain`
-4. Redeploy the service.
-5. Test from UI:
-   - Open `Forgot password` and submit a registered email.
-   - Check inbox/spam for reset email.
+### 4. Start Frontend
 
-## Environment Variables Reference
+```bash
+cd front_end
+npm install
+npm run dev
+```
 
-- Root: `.env.example`
+Frontend runs at:
 
-## Scripts
+```text
+http://localhost:5173
+```
 
-Backend:
-- `npm run dev`
-- `npm run build`
-- `npm start`
+---
 
-Frontend:
-- `npm run dev`
-- `npm run build`
-- `npm run lint`
-- `npm run preview`
+## Live Demo
+
+https://jamnote.onrender.com/
+
+---
+
+## Author
+
+**Yash Garg**
+
+GitHub: https://github.com/yashgarg1708  
+LinkedIn: https://linkedin.com/in/yashgarg1708
+
+<img width="1512" height="859" alt="Screenshot 2026-03-08 at 4 29 23 PM" src="https://github.com/user-attachments/assets/94553880-3502-4d9a-a02b-79fea492241d" />
+<img width="1512" height="855" alt="Screenshot 2026-03-08 at 4 29 47 PM" src="https://github.com/user-attachments/assets/0670cce4-ede9-4232-88d4-15577591d5ec" />
+<img width="1510" height="857" alt="Screenshot 2026-03-08 at 4 30 02 PM" src="https://github.com/user-attachments/assets/ac9baa95-fa82-4a8a-80e2-737f01c2e485" />
+<img width="1512" height="856" alt="Screenshot 2026-03-08 at 4 30 12 PM" src="https://github.com/user-attachments/assets/63af7887-5582-45f7-80e1-d072ab2e398c" />
+
